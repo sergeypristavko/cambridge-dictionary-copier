@@ -1,0 +1,21 @@
+{
+  "name": "hd-rezka-extension-for-english-learners",
+  "version": "1.0.0",
+  "description": "HDrezka plugin for English learners",
+  "repository": "git@github.com:sergeypristavko/hdrezka-for-english-learners.git",
+  "author": "Sergey Pristavko <serezha2145@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@parcel/config-webextension": "^2.8.0",
+    "parcel": "^2.8.0",
+    "process": "^0.11.10"
+  },
+  "scripts": {
+    "start": "parcel watch src/manifest.json --host localhost",
+    "build": "parcel build src/manifest.json"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
