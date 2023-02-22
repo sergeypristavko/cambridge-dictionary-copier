@@ -8,62 +8,58 @@ const SYNONYMS_NUMBER = 3
 
 const $entries = [
     ...document.querySelectorAll('.pr.idiom-block'),
-    ...document.querySelectorAll('.pr.entry-body__el')
+    ...document.querySelectorAll('.pr.entry-body__el'),
+    ...document.querySelectorAll('.pv-block'),
 ]
 
-const elementSelectedHandler = (element) => {
+const outlineSelectedElement = (element) => {
     if (!element) return
 
     element.classList.add('selected-by-cdc')
 }
 
-try {
-    $entries.forEach($entry => {
-        const $ = selector => {
-            const element = $entry.querySelector(selector)
+$entries.forEach($entry => {
+    const $ = selector => {
+        const element = $entry.querySelector(selector)
 
-            if (element) {
-                elementSelectedHandler(element)
-                return element.textContent.trim()
-            }
-
-            return ''
+        if (element) {
+            outlineSelectedElement(element)
+            return element.textContent.trim()
         }
 
-        const $$ = (selector, numberOfElements) => {
-            const elements = (Array.isArray(selector) ? selector : [selector])
-                .map(x => [...$entry.querySelectorAll(x)]).flat().slice(0, numberOfElements)
+        return ''
+    }
 
-            elements.forEach(elementSelectedHandler)
-            return [...new Set(elements.map(x => x.textContent.trim()))]
-        }
+    const $$ = (selector, numberOfElements) => {
+        const elements = (Array.isArray(selector) ? selector : [selector])
+            .map(x => [...$entry.querySelectorAll(x)]).flat().slice(0, numberOfElements)
 
-        const headWord = $('.di-title')
-        const pronunciation = $('.us.dpron-i  .pron.dpron') || $('.pron.dpron')
-        const description = $('.def.ddef_d.db').replaceAll(':', '').trim()
-        // TODO: take more examples from the "More examples" section
-        const examples = $$('.examp.dexamp', EXAMPLES_NUMBER).join('\n')
-        const synonyms = $$([`.synonym a`, `.synonyms a`, `.daccord.fs16 a`], SYNONYMS_NUMBER).join(', ')
+        elements.forEach(outlineSelectedElement)
+        return [...new Set(elements.map(x => x.textContent.trim()))]
+    }
 
-        const onclick = () => {
-            const data = `${headWord} ${pronunciation} ${synonyms.length ? `(${synonyms})` : ''} \n${examples}\n\n${description}`
+    const headWord = $('.di-title')
+    const pronunciation = $('.us.dpron-i  .pron.dpron') || $('.pron.dpron')
+    const description = $('.def.ddef_d.db').replaceAll(':', '').trim()
+    const examples = $$('.examp.dexamp', EXAMPLES_NUMBER).join('\n')
+    const synonyms = $$([`.synonym a`, `.synonyms a`, `.daccord.fs16 a`], SYNONYMS_NUMBER).join(', ')
 
-            navigator.clipboard.writeText(data)
+    const onclick = () => {
+        const data = `${headWord} ${pronunciation} ${synonyms.length ? `(${synonyms})` : ''} \n${examples}\n\n${description}`
 
-            copyButton.src = doneIcon
+        navigator.clipboard.writeText(data)
 
-            setTimeout(() => {
-                copyButton.src = copyIcon
-            }, DONE_ICON_SHOWTIME)
-        }
+        copyButton.src = doneIcon
 
-        const copyButton = document.createElement('img')
-        copyButton.src = copyIcon
-        copyButton.className = 'copy-btn'
-        copyButton.onclick = onclick
+        setTimeout(() => {
+            copyButton.src = copyIcon
+        }, DONE_ICON_SHOWTIME)
+    }
 
-        $entry.querySelector('.di-title').insertAdjacentElement('beforeEnd', copyButton)
-    })
-} catch (e) {
-    console.error('fix the shit', e)
-}
+    const copyButton = document.createElement('img')
+    copyButton.src = copyIcon
+    copyButton.className = 'copy-btn'
+    copyButton.onclick = onclick
+
+    $entry.querySelector('.di-title').insertAdjacentElement('beforeEnd', copyButton)
+})
