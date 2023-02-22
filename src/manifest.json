@@ -1,6 +1,6 @@
 {
-  "name": "HDrezka for English learners",
-  "description": "HDrezka for English learners",
+  "name": "Cambridge Dictionary Copier",
+  "description": "Cambridge Dictionary Copier",
   "version": "1.0",
   "permissions": [
     "storage"
@@ -12,13 +12,12 @@
         "scripts/index.js"
       ],
       "matches": [
-        "https://hdrezka.ag/*.html"
+        "https://dictionary.cambridge.org/dictionary/*"
       ]
     }
   ],
   "action": {
-    "default_title": "HDrezka for English learners",
-    "default_icon": "assets/icon.png",
-    "default_popup": "popup/popup.html"
+    "default_title": "Cambridge Dictionary Copier",
+    "default_icon": "assets/icon.png"
   }
 }
