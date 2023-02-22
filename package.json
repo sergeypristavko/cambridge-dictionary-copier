@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "parcel watch src/manifest.json --host localhost",
-    "build": "parcel build src/manifest.json"
+    "build": "parcel build src/manifest.json --no-content-hash"
   },
   "dependencies": {
     "react": "^18.2.0",
