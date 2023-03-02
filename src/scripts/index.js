@@ -19,8 +19,8 @@ const outlineSelectedElement = (element) => {
 }
 
 $entries.forEach($entry => {
-    const $ = selector => {
-        const element = $entry.querySelector(selector)
+    const $ = (selector, el) => {
+        const element = (el || $entry).querySelector(selector)
 
         if (element) {
             outlineSelectedElement(element)
@@ -30,36 +30,39 @@ $entries.forEach($entry => {
         return ''
     }
 
-    const $$ = (selector, numberOfElements) => {
+    const $$ = (selector, numberOfElements, el) => {
         const elements = (Array.isArray(selector) ? selector : [selector])
-            .map(x => [...$entry.querySelectorAll(x)]).flat().slice(0, numberOfElements)
+            .map(x => [...(el || $entry).querySelectorAll(x)]).flat().slice(0, numberOfElements)
 
         elements.forEach(outlineSelectedElement)
         return [...new Set(elements.map(x => x.textContent.trim()))]
     }
 
     const headWord = $('.di-title')
-    const pronunciation = $('.us.dpron-i  .pron.dpron') || $('.pron.dpron')
-    const description = $('.def.ddef_d.db').replaceAll(':', '').trim()
-    const examples = $$('.examp.dexamp', EXAMPLES_COUNT).join('\n')
-    const synonyms = $$([`.synonym a`, `.synonyms a`, `.daccord.fs16 a`], SYNONYMS_COUNT).join(', ')
+    const pronunciation = $('.us.dpron-i  .pron.dpron') || $('.pron.dpron');
 
-    const onclick = () => {
-        const data = `${headWord} ${pronunciation} ${synonyms.length ? `(${synonyms})` : ''} \n${examples}\n\n${description}`
+    [...$entry.querySelectorAll('.def-block')].forEach($definition => {
+        const description = $('.def.ddef_d.db', $definition).replaceAll(':', '').trim()
+        const examples = $$(['.examp.dexamp', '.eg.dexamp.hax'], EXAMPLES_COUNT, $definition).join('\n')
+        const synonyms = $$([`.synonym a`, `.synonyms a`, `.daccord.fs16 a`], SYNONYMS_COUNT, $definition).join(', ')
 
-        navigator.clipboard.writeText(data)
+        const onclick = () => {
+            const data = `${headWord} ${pronunciation} ${synonyms.length ? `(${synonyms})` : ''} \n${examples}\n\n${description}`
 
-        copyButton.src = doneIcon
+            navigator.clipboard.writeText(data)
 
-        setTimeout(() => {
-            copyButton.src = copyIcon
-        }, DONE_ICON_SHOWTIME)
-    }
+            copyButton.src = doneIcon
 
-    const copyButton = document.createElement('img')
-    copyButton.src = copyIcon
-    copyButton.className = 'copy-btn'
-    copyButton.onclick = onclick
+            setTimeout(() => {
+                copyButton.src = copyIcon
+            }, DONE_ICON_SHOWTIME)
+        }
 
-    $entry.querySelector('.di-title').insertAdjacentElement('beforeEnd', copyButton)
+        const copyButton = document.createElement('img')
+        copyButton.src = copyIcon
+        copyButton.className = 'copy-btn'
+        copyButton.onclick = onclick
+
+        $definition.querySelector('.def.ddef_d.db').insertAdjacentElement('beforeEnd', copyButton)
+    })
 })
