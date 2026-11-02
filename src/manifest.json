@@ -16,7 +16,8 @@
         "scripts/index.js"
       ],
       "matches": [
-        "https://dictionary.cambridge.org/dictionary/*"
+        "https://dictionary.cambridge.org/dictionary/*",
+        "https://dictionary.cambridge.org/us/dictionary/*"
       ]
     }
   ],
